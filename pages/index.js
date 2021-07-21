@@ -26,12 +26,47 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+function ProfileRelationsBox(propriedades) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {/* {seguidores.map((itemAtual) => {
+          return (
+            <li key={itemAtual}>
+              <a href={`/users/${itemAtual}`}>
+                <img src={`https://github.com/${itemAtual}.png`} />
+                <img src={itemAtual.image} />
+                <span>{itemAtual.title}</span>
+              </a>
+            </li>
+          )
+        })} */}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
   const githubUser = 'vinivilares';
   const [comunidades, setComunidades] = React.useState([{
     id: '23192738912739812312',
     title: 'Eu Odeio Acordar Cedo',
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+  }, {
+    id: '2873891273981298312',
+    title: 'Queria Sorvete Mas Era Feijão',
+    image: 'https://scontent.fcgh4-1.fna.fbcdn.net/v/t1.6435-9/167215787_4114938901863525_9196317370430945342_n.png?_nc_cat=110&ccb=1-3&_nc_sid=730e14&_nc_eui2=AeHIA9ASpRd7ecoip8ciyht21KVSLnCPtlrUpVIucI-2Wuq9tyfrZAvGyvXmDelGo3hTP223jDkbPlVRmya-1i6f&_nc_ohc=r3YCuniUOswAX-Es7tX&_nc_ht=scontent.fcgh4-1.fna&oh=d86430bab14ad21d5919cc02e09da948&oe=60FB1E92'
+  }, {
+    id: '23124515611238312',
+    title: 'Buddy Poke',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuusEVNegm_nddYnmqlFobFB5JG3ynZg-26-Mo9pxff0FES35JOu4TxbrQzFTrJQmPs2E&usqp=CAU'
+  }, {
+    id: '2312231456685238312',
+    title: 'Eu Odeio Esperar Resposta no MSN',
+    image: 'https://img10.orkut.br.com/community/9197344aa3f8d682ece581e1146bec4a.jpg'
   }]);
   const pessoasFavoritas = [
     'juunegreiros',
@@ -41,6 +76,18 @@ export default function Home() {
     'renelcm',
     'GuilhermeMontez'
   ]
+
+  const [seguidores, setSeguidores] = React.useState([]);
+  // 0 - Pegar o array de dados do Github
+  React.useEffect(function () {
+    fetch('https://api.github.com/users/vinivilares/followers').then(function (respostaDoServidor) {
+      return respostaDoServidor.json();
+    }).then(function (respostaCompleta) {
+      setSeguidores(respostaCompleta);
+    })
+  }, [])
+
+  // 1 - Criar um box que vai ter um map, baseado nos itens do array que pegamos do Github
 
   return (
     <>
@@ -82,7 +129,8 @@ export default function Home() {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          
+
+          <ProfileRelationsBox title="Seguidores" items={seguidores} />
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Amigos ({pessoasFavoritas.length})
@@ -102,7 +150,7 @@ export default function Home() {
           </ProfileRelationsBoxWrapper>
 
           <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
+            <h2 className="smallTitle">
               Comunidades ({comunidades.length})
             </h2>
             <ul>
